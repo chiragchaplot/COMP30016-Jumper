@@ -38,15 +38,12 @@ public class nalamcchaplot implements Player, Piece
 		playertype = p;
 		
 		//Assign Player types
-		if(playertype==WHITE){
+		if(playertype==WHITE)
 			opponenttype=BLACK;
-		}
-		else if(playertype == BLACK){
+		else if(playertype == BLACK)
 			opponenttype = WHITE;
-		}
-		if(b == null){
+		if(b == null)
 			return INVALID;
-		}
 
 		//Set number of moves to zero
 		numMoves=0;
@@ -58,10 +55,20 @@ public class nalamcchaplot implements Player, Piece
 	 *  Return object of class Move
 	 *  Use minmax algorithm here to predict bestmove
 	 */
-	public Move makeMove(board b, Move LastPlayedMove)
+	public Move makeMove()
 	{
-		node currNode= new node(LastPlayedMove, b);
-		Move bestmove = minmax.Decision(currNode);
+		Move bestMove = minmax(b,playertype, opponenttype, 7);
+		b.validMove(bestMove);
+		return bestMove;
+		
+	}
+	
+	/* Function called by referee to inform the player about the opponent's move
+	 *  Return -1 if the move is illegal otherwise return 0
+	 */
+	public int opponentMove(Move m)
+	{
+		
 	}
 	
 	

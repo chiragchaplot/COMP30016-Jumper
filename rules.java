@@ -25,7 +25,7 @@ public class rules
 		{
 			for(int j=0;j<board.size;j++)
 			{
-				if(boardConfig[i][j]==Piece.EMPTY)
+				if(boardConfig[i][j]==Piece.WHITE)
 				{
 					placeMoves+=1;
 				}
