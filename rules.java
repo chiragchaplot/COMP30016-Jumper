@@ -15,7 +15,7 @@ public class rules
 	 * @param boardConfig
 	 * @return placeMoves
 	 */
-	public static int numPlaceMoves( char[][] boardConfig)
+	public static int numPlaceMoves( int[][] boardConfig)
 	{
 		
 		//Number of moves 
@@ -25,7 +25,7 @@ public class rules
 		{
 			for(int j=0;j<board.size;j++)
 			{
-				if(boardConfig[i][j]=='-')
+				if(boardConfig[i][j]==Piece.EMPTY)
 				{
 					placeMoves+=1;
 				}
@@ -63,7 +63,7 @@ public class rules
 	 * @param colour
 	 * @return jumpMoves
 	 */
-	public static int findJumpMoves(char colour){
+	public static int findJumpMoves(int colour){
 		jumpMoves=0;
 		for(int i=0;i<board.size;i++)
 		{
@@ -126,7 +126,7 @@ public class rules
 	 * @param xCoordinate
 	 * @param yCoordinate
 	 */
-	public static void numJumpMoves(char[][] boardConfig, int xCoordinate, int yCoordinate){
+	public static void numJumpMoves(int[][] boardConfig, int xCoordinate, int yCoordinate){
 		/*System.out.println("numJumpMoves responding to call for "+ xCoordinate+ yCoordinate);
 		*for(int k=0;k<jumpedcells.size();k++){
 		*System.out.println("Printing jumpedcells"+jumpedcells.get(k).getx()+ jumpedcells.get(k).gety());
@@ -138,10 +138,10 @@ public class rules
 		//check top left diagonal------------------------------------------------------------------------------------
 		p.setx(xCoordinate-2);
 		p.sety(yCoordinate-2);
-		if(isOnBoard(xCoordinate-2, yCoordinate-2) && boardConfig[xCoordinate-2][yCoordinate-2]=='-'
+		if(isOnBoard(xCoordinate-2, yCoordinate-2) && boardConfig[xCoordinate-2][yCoordinate-2]==Piece.EMPTY
 				&& notInJumpedcells(p, jumpedcells)){
 			//System.out.println("top left first if, X="+(xCoordinate-2)+"Y="+(yCoordinate-2));
-			if(boardConfig[xCoordinate-1][yCoordinate-1]=='W' || boardConfig[xCoordinate-1][yCoordinate-1]=='B'){
+			if(boardConfig[xCoordinate-1][yCoordinate-1]==Piece.WHITE || boardConfig[xCoordinate-1][yCoordinate-1]==Piece.BLACK){
 				//System.out.println("top left second if, X="+(xCoordinate-1)+"Y="+(yCoordinate-1));
 				jumpedcells.add(p);
 				//System.out.println("found a jumped move at left diagonal.... result is"+p.getx()+p.gety());
@@ -153,10 +153,10 @@ public class rules
 		//check straight top------------------------------------------------------------------------------------------
 		p.setx(xCoordinate-2);
 		p.sety(yCoordinate);
-		if(isOnBoard(xCoordinate-2, yCoordinate) && boardConfig[xCoordinate-2][yCoordinate]=='-'
+		if(isOnBoard(xCoordinate-2, yCoordinate) && boardConfig[xCoordinate-2][yCoordinate]==Piece.EMPTY
 				&& notInJumpedcells(p, jumpedcells)){
 			//System.out.println("straight top first if, X="+(xCoordinate-2)+"Y="+(yCoordinate));
-			if(boardConfig[xCoordinate-1][yCoordinate]=='W' || boardConfig[xCoordinate-1][yCoordinate]=='B')
+			if(boardConfig[xCoordinate-1][yCoordinate]==Piece.WHITE || boardConfig[xCoordinate-1][yCoordinate]==Piece.BLACK)
 			{
 				//System.out.println("straight top second if, X="+(xCoordinate-1)+"Y="+(yCoordinate));
 				jumpedcells.add(p);
@@ -170,10 +170,10 @@ public class rules
 		//check top right diagonal--------------------------------------------------------------
 		p.setx(xCoordinate-2);
 		p.sety(yCoordinate+2);
-		if(isOnBoard(xCoordinate-2, yCoordinate+2) && boardConfig[xCoordinate-2][yCoordinate+2]=='-'
+		if(isOnBoard(xCoordinate-2, yCoordinate+2) && boardConfig[xCoordinate-2][yCoordinate+2]==Piece.EMPTY
 				&& notInJumpedcells(p, jumpedcells)){
 			//System.out.println("top right first if, X="+(xCoordinate-2)+"Y="+(yCoordinate+2));
-			if(boardConfig[xCoordinate-1][yCoordinate+1]=='W' || boardConfig[xCoordinate-1][yCoordinate+1]=='B'){
+			if(boardConfig[xCoordinate-1][yCoordinate+1]==Piece.WHITE || boardConfig[xCoordinate-1][yCoordinate+1]==Piece.BLACK){
 				//System.out.println("top right second if, X="+(xCoordinate-1)+"Y="+(yCoordinate+1));
 				jumpedcells.add(p);
 				//System.out.println("found a jumped move at top right.... result is"+p.getx()+p.gety());
@@ -186,10 +186,10 @@ public class rules
 		//System.out.println("starting cell is "+xCoordinate+yCoordinate);
 		p.setx(xCoordinate);
 		p.sety(yCoordinate-2);
-		if(isOnBoard(xCoordinate, yCoordinate-2) && boardConfig[xCoordinate][yCoordinate-2]=='-'
+		if(isOnBoard(xCoordinate, yCoordinate-2) && boardConfig[xCoordinate][yCoordinate-2]==Piece.EMPTY
 				&& notInJumpedcells(p, jumpedcells)){
 			//System.out.println("straight left first if, X="+(xCoordinate)+"Y="+(yCoordinate-2));
-			if(boardConfig[xCoordinate][yCoordinate-1]=='W' || boardConfig[xCoordinate][yCoordinate-1]=='B'){
+			if(boardConfig[xCoordinate][yCoordinate-1]==Piece.WHITE || boardConfig[xCoordinate][yCoordinate-1]==Piece.BLACK){
 				//System.out.println("straight left second if, X="+(xCoordinate)+"Y="+(yCoordinate-1));
 				jumpedcells.add(p);
 				//System.out.println("found a jumped move at straight left.... result is"+p.getx()+p.gety());
@@ -201,10 +201,10 @@ public class rules
 		//check straight right-------------------------------------------------------------------
 		p.setx(xCoordinate);
 		p.sety(yCoordinate+2);
-		if(isOnBoard(xCoordinate, yCoordinate+2) && boardConfig[xCoordinate][yCoordinate+2]=='-'
+		if(isOnBoard(xCoordinate, yCoordinate+2) && boardConfig[xCoordinate][yCoordinate+2]==Piece.EMPTY
 				&& notInJumpedcells(p, jumpedcells)){
 			//System.out.println("straight right first if, X="+(xCoordinate)+"Y="+(yCoordinate+2));
-			if(boardConfig[xCoordinate][yCoordinate+1]=='W' || boardConfig[xCoordinate][yCoordinate+1]=='B'){
+			if(boardConfig[xCoordinate][yCoordinate+1]==Piece.WHITE || boardConfig[xCoordinate][yCoordinate+1]==Piece.BLACK){
 				//System.out.println("straight right second if, X="+(xCoordinate)+"Y="+(yCoordinate+1));
 				jumpedcells.add(p);
 				//System.out.println("found a jumped move straight right.... result is"+p.getx()+p.gety());
@@ -216,10 +216,10 @@ public class rules
 		//check bottom left diagonal----------------------------------------------------
 		p.setx(xCoordinate+2);
 		p.sety(yCoordinate-2);
-		if(isOnBoard(xCoordinate+2, yCoordinate-2) && boardConfig[xCoordinate+2][yCoordinate-2]=='-'
+		if(isOnBoard(xCoordinate+2, yCoordinate-2) && boardConfig[xCoordinate+2][yCoordinate-2]==Piece.EMPTY
 				&& notInJumpedcells(p, jumpedcells)){
 			//System.out.println("bottom left first if, X="+(xCoordinate+2)+"Y="+(yCoordinate-2));
-			if(boardConfig[xCoordinate+1][yCoordinate-1]=='W' || boardConfig[xCoordinate+1][yCoordinate-1]=='B'){
+			if(boardConfig[xCoordinate+1][yCoordinate-1]==Piece.WHITE || boardConfig[xCoordinate+1][yCoordinate-1]==Piece.BLACK){
 				//System.out.println("bottom left second if, X="+(xCoordinate+1)+"Y="+(yCoordinate-1));
 				jumpedcells.add(p);
 				//System.out.println("found a jumped move bottom left.... result is"+p.getx()+p.gety());
@@ -231,11 +231,11 @@ public class rules
 		//check straight bottom------------------------------------------------------------------------
 		p.setx(xCoordinate+2);
 		p.sety(yCoordinate);
-		if(isOnBoard(xCoordinate+2, yCoordinate) && boardConfig[xCoordinate+2][yCoordinate]=='-'
+		if(isOnBoard(xCoordinate+2, yCoordinate) && boardConfig[xCoordinate+2][yCoordinate]==Piece.EMPTY
 				&& notInJumpedcells(p, jumpedcells)){
 			//System.out.println("straight bottom first if for"+x+y+", Piece is "+ boardConfig[x][y]);
 			
-			if(boardConfig[xCoordinate+1][yCoordinate]=='W' || boardConfig[xCoordinate+1][yCoordinate]=='B'){
+			if(boardConfig[xCoordinate+1][yCoordinate]==Piece.WHITE || boardConfig[xCoordinate+1][yCoordinate]==Piece.BLACK){
 				//System.out.println("straight bottom second if, X="+(xCoordinate+1)+"Y="+(yCoordinate));
 				jumpedcells.add(p);
 				//System.out.println("found a jumped move straight bottom.... result is"+p.getx()+p.gety());
@@ -247,10 +247,10 @@ public class rules
 		//check bottom right diagonal-----------------------------------------------------------------
 		p.setx(xCoordinate+2);
 		p.sety(yCoordinate+2);
-		if(isOnBoard(xCoordinate+2, yCoordinate+2) && boardConfig[xCoordinate+2][yCoordinate+2]=='-'
+		if(isOnBoard(xCoordinate+2, yCoordinate+2) && boardConfig[xCoordinate+2][yCoordinate+2]==Piece.EMPTY
 				&& notInJumpedcells(p, jumpedcells)){
 			//System.out.println("bottom right first if, X="+(xCoordinate+2)+"Y="+(yCoordinate+2));
-			if(boardConfig[xCoordinate+1][yCoordinate+1]=='W' || boardConfig[xCoordinate+1][yCoordinate+1]=='B'){
+			if(boardConfig[xCoordinate+1][yCoordinate+1]==Piece.WHITE || boardConfig[xCoordinate+1][yCoordinate+1]==Piece.BLACK){
 				//System.out.println("bottom right second if, X="+(xCoordinate+1)+"Y="+(yCoordinate+1));
 				jumpedcells.add(p);
 				//System.out.println("found a jumped move bottom right.... result is"+p.getx()+p.gety());

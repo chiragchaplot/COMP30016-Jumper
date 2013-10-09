@@ -1,4 +1,5 @@
 
+
 import java.io.PrintStream;
 
 /*   
@@ -8,8 +9,6 @@ import java.io.PrintStream;
  *   @author msalehi
  */
 public interface Player{
-	
-
 	/* This function when called by referee should return the winner
 	 *  
 	 */
@@ -19,6 +18,7 @@ public interface Player{
 	 *  Return 0 for successful initialization and -1 for failed one.
 	 */
 	public int init(int n, int p);
+	
 	/* Function called by referee to request a move by the player.
 	 *  Return object of class Move
 	 */

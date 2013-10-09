@@ -13,12 +13,30 @@ public class board
 	//W - White Pieces, B- Black Pieces, D = Dead cell Spot, Blank=Blank cells
 	public static int size,W,B,X, Blank;
 	//initialize board as a 2D array of chars
-	public static char[][]  bd;
+	public static int[][]  bd;
 	
-	/** Constructor
+	/*
+	 * Constructor to set up board
 	 */
-	public board(){
-	};
+	public board(int n)
+	{
+		/*this.size=size;
+		for(int i=0;i<size;i++)
+			for(int j=0;j<size;j++)
+			{
+				bd[i][j]='-';
+			}*/
+		
+		bd = new int[n][n];
+		size = n;
+		int i,j;
+		i=j=0;
+		for(i=0;i<n;i++){
+			for(j=0;j<n;j++){
+				bd[i][j]= Piece.EMPTY;
+			}
+		}
+	}
 	
 	
 	/**
@@ -32,7 +50,7 @@ public class board
 		String text= in.readLine();
 		size= Integer.parseInt(text);	
 		W=0;B=0;X=0;Blank=0;
-		bd = new char[size][size];
+		bd = new int[size][size];
 		int i=0;
 		while(i<size){
 			text = in.readLine();
@@ -45,23 +63,23 @@ public class board
 				{
 				case 'w':
 				case 'W':	W++;
-							bd[i][j]='W';
+							bd[i][j]=Piece.WHITE;
 							j++;
 							continue;
 							
 				case 'b':
 				case 'B':	B++;
-							bd[i][j]='B';
+							bd[i][j]=Piece.BLACK;
 							j++;
 							continue;
 							
 				case '-':	Blank++;
-							bd[i][j]='-';
+							bd[i][j]=Piece.EMPTY;
 							j++;
 							continue;
 					
 				case 'x':
-				case 'X':	bd[i][j]='X';
+				case 'X':	bd[i][j]=Piece.DEAD;
 							j++;
 							X++;
 							continue;
@@ -97,12 +115,28 @@ public class board
 		System.out.println(' ');
 	}
 	
-	board(int n)
+	//Function to return number of cell types
+	int numpieces(int type)
 	{
-		for(int i=0;i<n;i++)
-			for(int j=0;j<n;j++)
-			{
-				bd[i][j]=' ';
-			}
+		if (type==Piece.WHITE)
+		{
+			return W;
+		}
+		else if(type==Piece.BLACK)
+		{
+			return B;
+		}
+		else if(type==Piece.DEAD)
+		{
+			return X;
+		}
+		else if(type==Piece.EMPTY)
+		{
+			return Blank;
+		}
+		else
+		{
+			return Piece.INVALID;
+		}
 	}
 }
