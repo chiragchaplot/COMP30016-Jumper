@@ -72,38 +72,6 @@ public class successor
 	/*
 	 * Find the first jump moves from a given index
 	 */
-	/*
-	 * // Takes an initial position and calculates jump from there
-	// If valid jump, calls currentJump
-	// Inserts jump moves from position (row,col)
-	private void initialJumps(ArrayList<Move> jumpMoves, int row, int col, int player) {
-		
-		for (int r = row-2; r <= row+2; r+=2) {
-			for (int c = col-2; c <= col+2; c+=2) {
-				// skip case of initial jump position
-				if (r == row && c == col) {
-					continue;
-				}
-				// checks to see if can jump into r,c
-				if (canJump(row, col, r, c)) {
-					ArrayList<Integer> rowPositions = new ArrayList<Integer>();
-					ArrayList<Integer> colPositions = new ArrayList<Integer>();
-					
-					rowPositions.add(row);
-					rowPositions.add(r);
-					colPositions.add(col);
-					colPositions.add(c);
-					
-					// Inserts jumps into board and calls currentJumps
-					insert(r,c,player);
-					currentJumps(jumpMoves, rowPositions,colPositions,r,c,player);
-					// Removes initial jump from board
-					remove(r,c);
-				}
-			}
-		}
-	}
-	 */
 	public void firstJump(ArrayList<Move> jumpMoves, int r, int c, int playertype, board b)
 	{
 		for(int i=r-2;i<r+2;i=i+2)
@@ -145,7 +113,61 @@ public class successor
 	 */
 	public void compoundJump(ArrayList<Move> jumpMoves, ArrayList<Integer> rowPos,ArrayList<Integer> colPos,int row, int col, int player, board b)
 	{
+		int terminal=1;
 		
+		for(int i=row-2;i<row+2;i=i+2)
+			for(int j=col-2;j<col+2;j=j+2)
+			{
+				if(i==row && j==col)
+				{
+					continue;
+				}
+				else if(b.jumpMovePossible(row, col, i, j))
+				{
+					terminal=0;
+					
+					//Add to list of nodes visited
+					rowPos.add(i);
+					colPos.add(j);
+					
+					//Insert player
+					b.bd[row][col]=player;
+					
+					//Check for more jumps by recrusion
+					compoundJump(jumpMoves, rowPos, colPos, i,j,player, b);
+					
+					//After checking make the piece empty to check for new avenues
+					b.bd[i][j]=Piece.EMPTY;					
+				}
+			}
+		
+		if(terminal==1)
+		{
+			//Convert ArrayList to Array
+			int[] RowPositions = getArray(rowPos);
+			int[] ColPositions = getArray(colPos);
+			
+			//Initialize the move
+			Move m = new Move(player, false, RowPositions, ColPositions);
+			
+			//Add it to move
+			jumpMoves.add(m);
+		}
+		
+		rowPos.remove(rowPos.size()-1);
+		colPos.remove(colPos.size()-1);
+	}
+	
+	//Get array from array list
+	public int[] getArray(ArrayList<Integer> num)
+	{
+		int[] temp = new int[num.size()];
+		for(int i=0;i<num.size();i++)
+		{
+			temp[i]=num.get(i);
+		}
+		
+		return temp;
 	}
 
 }
