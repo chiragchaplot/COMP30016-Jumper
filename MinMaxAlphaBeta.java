@@ -20,11 +20,11 @@ public class MinMaxAlphaBeta implements Piece {
 		ArrayList<Move> moveOptions= successor.moveOptions(player, board);
 		for (int i=0; i<moveOptions.size();i++) {
 			
-			board tempBoard = new board(board.size);
+			board tempBoard = new board(board.Size());
 			
-			for (int row=0; row<tempBoard.size; row++) {
-				for (int col=0; col<tempBoard.size; col++) {
-					tempBoard.insert(row, col, board.bd[row][ col]);
+			for (int row=0; row<tempBoard.Size(); row++) {
+				for (int col=0; col<tempBoard.Size(); col++) {
+					tempBoard.insert(row, col, board.getBd()[row][ col]);
 				}
 			}
 			
@@ -52,11 +52,11 @@ public class MinMaxAlphaBeta implements Piece {
 		
 		ArrayList<Move> moveOptions= successor.moveOptions(opponent, board);
 		for (int i=0; i<moveOptions.size();i++) {
-			board tempBoard = new board(board.size);
+			board tempBoard = new board(board.Size());
 			
-			for (int row=0; row<tempBoard.size; row++) {
-				for (int col=0; col<tempBoard.size; col++) {
-					tempBoard.insert(row, col, board.bd[row][ col]);
+			for (int row=0; row<tempBoard.Size(); row++) {
+				for (int col=0; col<tempBoard.Size(); col++) {
+					tempBoard.insert(row, col, board.getBd()[row][ col]);
 				}
 			}
 			
@@ -83,11 +83,11 @@ public class MinMaxAlphaBeta implements Piece {
 		
 		ArrayList<Move> moveOptions= successor.moveOptions(player, board);
 		for (int i=0; i<moveOptions.size();i++) {
-			board tempBoard = new board(board.size);
+			board tempBoard = new board(board.Size());
 			
-			for (int row=0; row<tempBoard.size; row++) {
-				for (int col=0; col<tempBoard.size; col++) {
-					tempBoard.insert(row, col, board.bd[row][col]);
+			for (int row=0; row<tempBoard.Size(); row++) {
+				for (int col=0; col<tempBoard.Size(); col++) {
+					tempBoard.insert(row, col, board.getBd()[row][col]);
 				}
 			}
 			

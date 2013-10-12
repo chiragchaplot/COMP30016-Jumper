@@ -18,7 +18,7 @@ public class moveHandler implements Piece {
 		else
 		{
 			if(!checkMoveType(move)) return false;
-			if(pushjumpMove(move, board)) return true;
+			if(checkJumpMove(move, board)) return true;
 			else return false;
 		}
 	}
@@ -38,16 +38,16 @@ public class moveHandler implements Piece {
 		//It's normal
 		else
 		{
-			board.bd[x][y]=move.P;
+			board.getBd()[x][y]=move.P;
 			return true;
 		}
 	}
 	
 	public static boolean isOnBoard(int x, int y, board board){
-		if(x<0 || x>board.size-1){
+		if(x<0 || x>board.Size()-1){
 			return false;
 		}
-		else if(y<0|| y>board.size-1){
+		else if(y<0|| y>board.Size()-1){
 				return false;
 			}
 		else return true;
@@ -56,7 +56,7 @@ public class moveHandler implements Piece {
 	
 	//if empty return true, if not empty return false
 	public static boolean cellEmpty(int x, int y, board board){
-		if(board.bd[x][y]!=EMPTY) return false;
+		if(board.getBd()[x][y]!=EMPTY) return false;
 		else return true;
 	}
 	
@@ -72,7 +72,7 @@ public class moveHandler implements Piece {
 		else return true;
 	}
 	
-	public static boolean pushjumpMove(Move move, board board)
+	public static boolean checkJumpMove(Move move, board board)
 	{
 		int[] x= move.RowPositions;
 		int[] y= move.ColPositions;
@@ -86,15 +86,15 @@ public class moveHandler implements Piece {
 			}
 			
 			// Insert jump move
-			board.bd[x[i]][y[i]] = move.P;
-			board.bd[x[i+1]][y[i+1]] = move.P;
+			board.getBd()[x[i]][y[i]] = move.P;
+			board.getBd()[x[i+1]][y[i+1]] = move.P;
 			
 			// piece that was jumped over is the opponent's piece
 			int xMiddle= (x[i]+x[i+1])/2;
 			int yMiddle= (y[i]+y[i+1])/2;		
-			if (board.bd[xMiddle][yMiddle] != move.P) 
+			if (board.getBd()[xMiddle][yMiddle] != move.P) 
 			{
-				board.bd[xMiddle][yMiddle] = Piece.DEAD;	
+				board.getBd()[xMiddle][yMiddle] = Piece.DEAD;	
 			}
 		}
 		
@@ -118,7 +118,7 @@ public class moveHandler implements Piece {
 		//Not dead
 		//Not Empty
 		else if(cellEmpty(xMiddle, yMiddle, board)) return false;
-		else if(board.bd[xMiddle][yMiddle]==Piece.DEAD) return false;
+		else if(board.getBd()[xMiddle][yMiddle]==Piece.DEAD) return false;
 		
 		//Check if the pieces are actually one jump away or not
 		

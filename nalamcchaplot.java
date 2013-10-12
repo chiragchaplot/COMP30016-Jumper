@@ -11,10 +11,10 @@ public class nalamcchaplot implements Player, Piece
 	 */
 	public int getWinner()
 	{
-		int white=b.numpieces(WHITE);
-		int black=b.numpieces(BLACK);
-		int dead=b.numpieces(DEAD);
-		int empty=b.numpieces(EMPTY);
+		int white=b.numPieces(WHITE);
+		int black=b.numPieces(BLACK);
+		int dead=b.numPieces(DEAD);
+		int empty=b.numPieces(EMPTY);
 		
 		//No winner yet
 		if(empty!=0)
@@ -58,7 +58,7 @@ public class nalamcchaplot implements Player, Piece
 	public Move makeMove()
 	{
 		Move bestMove = MinMaxAlphaBeta.bestMove(b,playertype, opponenttype);
-		b.validMove(bestMove);
+		moveHandler.validMove(bestMove, b);
 		return bestMove;
 		
 	}
@@ -80,9 +80,9 @@ public class nalamcchaplot implements Player, Piece
 	
 	public void printBoard(PrintStream output) {
 		
-		for(int row=0; row<b.size; row++){
-			for(int col=0; col<b.size; col++) {
-				output.print(b.bd[row][col]);
+		for(int row=0; row<b.Size(); row++){
+			for(int col=0; col<b.Size(); col++) {
+				output.print(b.getBd()[row][col]);
 				output.print(' ');
 			}
 			output.print('\n');

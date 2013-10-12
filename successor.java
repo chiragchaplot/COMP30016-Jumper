@@ -17,10 +17,10 @@ public class successor
 		// Searches board for empty places and adds each single
 		// move into possible moves
 		Move placeMoves;
-		for (int x=0; x<board.size; x++) 
-			for (int y=0; y<board.size; y++) 
+		for (int x=0; x<board.Size(); x++) 
+			for (int y=0; y<board.Size(); y++) 
 			{
-				if (board.bd[x][y] == Piece.EMPTY) {
+				if (board.getBd()[x][y] == Piece.EMPTY) {
 					int[] xArray = {x};
 					int[] yArray = {y};
 					placeMoves = new Move(player, true, xArray, yArray);
@@ -70,9 +70,9 @@ public class successor
 			RowPositions.add(toX[i]);
 			ColPositions.add(fromY);
 			ColPositions.add(toY[i]);
-			board.bd[toX[i]][toY[i]]=playertype;
+			board.getBd()[toX[i]][toY[i]]=playertype;
 			compoundJump(jumpMovesArrayList, RowPositions, ColPositions, toX[i], toY[i], playertype, board);
-			board.bd[toX[i]][toY[i]]=Piece.EMPTY;
+			board.getBd()[toX[i]][toY[i]]=Piece.EMPTY;
 			
 		}
 		}
@@ -100,13 +100,13 @@ public class successor
 				colPos.add(toY[i]);
 				
 				//Insert player
-				board.bd[fromX][fromY]=player;
+				board.getBd()[fromX][fromY]=player;
 				
 				//Check for more jumps by recursion
 				compoundJump(jumpMovesArrayList, rowPos, colPos, toX[i],toY[i],player, board);
 				
 				//After checking make the piece empty to check for new avenues
-				board.bd[toX[i]][toY[i]]=Piece.EMPTY;
+				board.getBd()[toX[i]][toY[i]]=Piece.EMPTY;
 				
 			}
 		}
