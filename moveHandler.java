@@ -54,6 +54,7 @@ public class moveHandler implements Piece {
 		
 	}
 	
+	//if empty return true, if not empty return false
 	public static boolean cellEmpty(int x, int y, board board){
 		if(board.bd[x][y]!=EMPTY) return false;
 		else return true;
@@ -73,12 +74,13 @@ public class moveHandler implements Piece {
 	
 	public static boolean pushjumpMove(Move move, board board)
 	{
-		//is jump possible
 		int[] x= move.RowPositions;
 		int[] y= move.ColPositions;
+		//is jump possible
+		
 		for (int i=0; i<x.length-1; i++) 
 		{// Check if jump move is into valid position
-			if (!jumpMovePossible(x[i],y[i],x[i+1], y[i+1], board)) 
+			if (!jumpMovePossible(x[i],x[i+1],y[i], y[i+1], board)) 
 			{
 				return false;	
 			}
@@ -88,9 +90,11 @@ public class moveHandler implements Piece {
 			board.bd[x[i+1]][y[i+1]] = move.P;
 			
 			// piece that was jumped over is the opponent's piece
-			if (board.bd[x[i]][y[i]] != move.P) 
+			int xMiddle= (x[i]+x[i+1])/2;
+			int yMiddle= (y[i]+y[i+1])/2;		
+			if (board.bd[xMiddle][yMiddle] != move.P) 
 			{
-				board.bd[x[i]][y[i]] = Piece.DEAD;	
+				board.bd[xMiddle][yMiddle] = Piece.DEAD;	
 			}
 		}
 		
@@ -98,55 +102,37 @@ public class moveHandler implements Piece {
 		}
 
 	
-	public static boolean jumpMovePossible(int r1, int c1, int r2, int c2, board board)
+	public static boolean jumpMovePossible(int x1, int x2, int y1, int y2, board board)
 	{
+		
+		int xMiddle= (x1+x2)/2;
+		int yMiddle= (y1+y2)/2;
 		//Check if r1,r2,c1,c2 are valid
-		if(r1<0||r2<0||c1<0||c2<0)
-		{
-			return false;
-		}
-		else if(r1>size||r2>size||c1>size||c2>size)
-		{
-			return false;
-		}
+		if(!isOnBoard(x1,y1, board)) return false;
+		if(!isOnBoard(x2,y2, board)) return false;
 		
 		//Check if r2 and c2 are empty
-		else if(bd[r2][c2]!=Piece.EMPTY)
-		{
-			return false;
-		}
+		else if(!cellEmpty(x2,y2, board)) return false;
 		
 		//Check if middle cells are in valid 
 		//Not dead
 		//Not Empty
-		else if(bd[(r1+r2)/2][(c1+c2)/2]==Piece.EMPTY)
-		{
-			return false;
-		}
-		else if(bd[(r1+r2)/2][(c1+c2)/2]==Piece.DEAD)
-		{
-			return false;
-		}
+		else if(cellEmpty(xMiddle, yMiddle, board)) return false;
+		else if(board.bd[xMiddle][yMiddle]==Piece.DEAD) return false;
 		
 		//Check if the pieces are actually one jump away or not
-		else
-		{
-			for(int i=r1-2;i<r1+2;i=i+2)
-				for(int j=c1-2;j<c1+2;j=j+2)
-				{
-					//When reaching r1 and c1 ignore it
-					if(i==r1&&j==c1)
-					{
-						continue;
-					}
-					//When reaching r2 and c2 return true
-					else if(i==r2&&j==c2)
-					{
-						return true;
-					}
-				}
-		}
 		
-		return false;
+
+		else if (x1-2==x2 && y1-2==y2)  return true;
+		else if (x1==x2 && y1-2==y2)  return true;
+		else if (x1+2==x2 && y1-2==y2)  return true;
+		else if (x1-2==x2 && y1==y2)  return true;
+		else if (x1+2==x2 && y1==y2)  return true;
+		else if (x1-2==x2 && y1+2==y2)  return true;
+		else if (x1==x2 && y1+2==y2)  return true;
+		else if (x1+2==x2 && y1+2==y2)  return true;
+		
+		
+		else return false;
 	}
 }

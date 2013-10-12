@@ -3,126 +3,123 @@ import java.util.ArrayList;
 public class successor
 {
 	
-	node expand(node Node, int player)
-	{
-		findJumpMoves(Node, player);
-		findPlaceMoves(Node, player);
-	}
-	
 	// Returns possible moves given current board state
-	public ArrayList<Move> achievableMoves(int player, board b) 
+	public static ArrayList<Move> moveOptions(int player, board board) 
 	{
 		ArrayList<Move> achievableMoves = new ArrayList<Move>();
-		ArrayList<Move> jumpMoves = new ArrayList<Move>();
-		
-		// Get the achievable jump moves
-		jumpMoves = getJumpMoves(player,b);
-		
-		// Inserts jump moves into the achievableMoves array
-		if (jumpMoves!=null) {
-			for (int i=0; i < jumpMoves.size(); i++) {
-				achievableMoves.add(jumpMoves.get(i));
-			}
-		}
-		
-		Move singleMoves;
-		int[] rowPos = new int[1];
-		int[] colPos = new int[1];
-		
+		achievableMoves = getJumpMoves(player,board);
+		achievableMoves= getPlaceMoves(achievableMoves, player, board);
+		return achievableMoves;
+	}
+	
+	private static ArrayList<Move> getPlaceMoves(ArrayList<Move> achievableMoves,
+			int player, board board) {
 		// Searches board for empty places and adds each single
 		// move into possible moves
-		for (int row=0; row<b.size; row++) 
-			for (int col=0; col<b.size; col++) 
+		Move placeMoves;
+		for (int x=0; x<board.size; x++) 
+			for (int y=0; y<board.size; y++) 
 			{
-				if (b.bd[row][col] == Piece.EMPTY) 
-				{
-					rowPos[0] = row;
-					colPos[0] = col;
-					singleMoves = new Move(player, true, rowPos, colPos);
-					achievableMoves.add(singleMoves);
-					rowPos = new int[1];
-					colPos = new int[1];
+				if (board.bd[x][y] == Piece.EMPTY) {
+					int[] xArray = {x};
+					int[] yArray = {y};
+					placeMoves = new Move(player, true, xArray, yArray);
+					achievableMoves.add(placeMoves);
 				}
 			}
 
 		return achievableMoves;
 	}
+
 	
 	/*
 	 * Take playertype and board config then returns all possible jump moves
 	 * @param: player, board configuration
 	 */
-	public ArrayList<Move> getJumpMoves(int player, board b)
+	public static ArrayList<Move> getJumpMoves(int player, board b)
 	{
-		ArrayList<Move> jumpMoves = new ArrayList <Move>();
+		ArrayList<Move> jumpMovesArrayList = new ArrayList <Move>();
 		
-		//Find every piece of the player
-		for(int i=0;i<b.size;i++)
-			for(int j=0;j<b.size;j++)
+		//For each player piece, find jump move
+		for(int i=0;i<board.size;i++)
+			for(int j=0;j<board.size;j++)
 			{
-				if(b.bd[i][j]==player)
+				if(board.bd[i][j]==player)
 				{
-					firstJump(jumpMoves,i,j,player,b);
+					simpleJump(jumpMovesArrayList,i,j,player,b);
 				}
 			}
-		return jumpMoves;
+		return jumpMovesArrayList;
 	}
 			
 			
 	/*
 	 * Find the first jump moves from a given index
 	 */
-	public void firstJump(ArrayList<Move> jumpMoves, int r, int c, int playertype, board b)
+	public static void simpleJump(ArrayList<Move> jumpMovesArrayList, int fromX, int fromY, int playertype, board board)
 	{
-		for(int i=r-2;i<r+2;i=i+2)
-			for(int j=c-2;j<c+2;j=j+2)
-			{
-				if (i==r && j==c)
-				{
-					continue;
-				}
-				
-				//check if one can jump into the specified row and column
-				if(b.jumpMovePossible(r, c, i, j))
-				{
-				}
-				ArrayList<Integer> colPos = new ArrayList<Integer>();
-				ArrayList<Integer> rowPos = new ArrayList<Integer>();
-				
-				//Add the new row positions
-				rowPos.add(r);
-				rowPos.add(i);
-				
-				//Add the column positions
-				colPos.add(c);
-				colPos.add(j);
-				
-				//Insert the player
-				b.bd[i][j]=playertype;
-				
-				//Find all successive jumps from this new position
-				compoundJump(jumpMoves, rowPos, colPos, r, c, playertype, b);
-				
-				//After finding all the moves remove the cell to empty
-				b.bd[i][j]=Piece.EMPTY;
-			}
+		int[] toX= {fromX-2, fromX, fromX+2, fromX-2, fromX+2, fromX-2, fromX, fromX+2};
+		int[] toY= {fromY-2, fromY-2, fromY-2, fromY, fromY, fromY+2, fromY+2, fromY+2,};
+		
+		for(int i=0; i<toX.length; i++){
+		
+		if(moveHandler.jumpMovePossible(fromX, toX[i], fromY, toY[i], board)){
+			ArrayList<Integer> ColPositions = new ArrayList<Integer>();
+			ArrayList<Integer> RowPositions = new ArrayList<Integer>();
+			RowPositions.add(fromX);
+			RowPositions.add(toX[i]);
+			ColPositions.add(fromY);
+			ColPositions.add(toY[i]);
+			board.bd[toX[i]][toY[i]]=playertype;
+			compoundJump(jumpMovesArrayList, RowPositions, ColPositions, toX[i], toY[i], playertype, board);
+			board.bd[toX[i]][toY[i]]=Piece.EMPTY;
+			
+		}
+		}
+		
+		
 	}
 	
 	/*
 	 * To account for compound jump moves
 	 */
-	public void compoundJump(ArrayList<Move> jumpMoves, ArrayList<Integer> rowPos,ArrayList<Integer> colPos,int row, int col, int player, board b)
+	public static void compoundJump(ArrayList<Move> jumpMovesArrayList, ArrayList<Integer> rowPos,ArrayList<Integer> colPos,int fromX, int fromY, int player, board board)
 	{
 		int terminal=1;
+		int[] toX= {fromX-2, fromX, fromX+2, fromX-2, fromX+2, fromX-2, fromX, fromX+2};
+		int[] toY= {fromY-2, fromY-2, fromY-2, fromY, fromY, fromY+2, fromY+2, fromY+2,};
 		
-		for(int i=row-2;i<row+2;i=i+2)
-			for(int j=col-2;j<col+2;j=j+2)
+		
+		for(int i=0; i<toX.length; i++){
+			
+			if(moveHandler.jumpMovePossible(fromX, toX[i], fromY, toY[i], board)){
+				terminal=0;
+				
+				//Add to list of nodes visited
+				rowPos.add(toX[i]);
+				colPos.add(toY[i]);
+				
+				//Insert player
+				board.bd[fromX][fromY]=player;
+				
+				//Check for more jumps by recursion
+				compoundJump(jumpMovesArrayList, rowPos, colPos, toX[i],toY[i],player, board);
+				
+				//After checking make the piece empty to check for new avenues
+				board.bd[toX[i]][toY[i]]=Piece.EMPTY;
+				
+			}
+		
+		
+		
+		for(int i=fromX-2;i<fromX+2;i=i+2)
+			for(int j=fromY-2;j<fromY+2;j=j+2)
 			{
-				if(i==row && j==col)
+				if(i==fromX && j==fromY)
 				{
 					continue;
 				}
-				else if(b.jumpMovePossible(row, col, i, j))
+				else if(b.jumpMovePossible(fromX, fromY, i, j))
 				{
 					terminal=0;
 					
@@ -131,10 +128,10 @@ public class successor
 					colPos.add(j);
 					
 					//Insert player
-					b.bd[row][col]=player;
+					b.bd[fromX][fromY]=player;
 					
 					//Check for more jumps by recrusion
-					compoundJump(jumpMoves, rowPos, colPos, i,j,player, b);
+					compoundJump(jumpMovesArrayList, rowPos, colPos, i,j,player, b);
 					
 					//After checking make the piece empty to check for new avenues
 					b.bd[i][j]=Piece.EMPTY;					
@@ -151,7 +148,7 @@ public class successor
 			Move m = new Move(player, false, RowPositions, ColPositions);
 			
 			//Add it to move
-			jumpMoves.add(m);
+			jumpMovesArrayList.add(m);
 		}
 		
 		rowPos.remove(rowPos.size()-1);

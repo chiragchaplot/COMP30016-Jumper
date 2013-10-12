@@ -11,13 +11,13 @@ import java.util.StringTokenizer;
 public class board 
 {
 	//W - White Pieces, B- Black Pieces, D = Dead cell Spot, Blank=Blank cells
-	public int size;
+	public static int size;
 	public int W;
 	public int B;
 	public int X;
 	public int Blank;
 	//initialize board as a 2D array of chars
-	public int[][]  bd;
+	public static int[][]  bd;
 	
 	/*
 	 * Constructor to set up board

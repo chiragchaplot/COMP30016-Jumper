@@ -57,7 +57,7 @@ public class nalamcchaplot implements Player, Piece
 	
 	public Move makeMove()
 	{
-		Move bestMove = minmax(b,playertype, opponenttype);
+		Move bestMove = MinMaxAlphaBeta.bestMove(b,playertype, opponenttype);
 		b.validMove(bestMove);
 		return bestMove;
 		
