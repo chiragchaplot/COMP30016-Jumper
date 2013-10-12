@@ -113,8 +113,9 @@ public class board
 	}
 	
 	//Function to return number of cell types
-	int numpieces(int type)
+	int numPieces(int type)
 	{
+		updatePieceCount();
 		if (type==Piece.WHITE)
 		{
 			return W;
@@ -138,6 +139,28 @@ public class board
 	}
 	
 	
+	public void updatePieceCount(){
+		int i,j;
+		int black=0;
+		int white=0;
+		int dead=0;
+		int empty=0;
+		for(i=0;i<board.size;i++){
+			for(j=0;j<board.size;j++){
+				if (bd[i][j]==Piece.WHITE){white++;}
+				if (bd[i][j]==Piece.BLACK){black++;}
+				if (bd[i][j]==Piece.DEAD){dead++;}
+				if (bd[i][j]==Piece.EMPTY){empty++;}	
+				}
+				
+			}
+		W= white;
+		B= black;
+		X= dead;
+		Blank=empty;
+	}
+
+
 	public boolean placeMove(Move move)
 	{
 		
@@ -293,6 +316,13 @@ public class board
 		}
 		
 		return false;
+	}
+
+
+		// Inserts row,col into board with value player
+	public void insert(int row, int col, int player) {
+		bd[row][col] = player;
+	
 	}
 	
 	/*

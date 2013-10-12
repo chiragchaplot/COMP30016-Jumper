@@ -3,7 +3,9 @@ import java.util.ArrayList;
 
 public class MinMaxAlphaBeta implements Piece {
 	
-	private final int maxSearchDepth= 7;
+	private static final int MAX_INT = 2^31;
+	private static final int MIN_INT = -2^31;
+	private final static int maxSearchDepth= 7;
 	private static int player;
 	private static int opponent;
 	
@@ -12,154 +14,122 @@ public class MinMaxAlphaBeta implements Piece {
 		player = playerType;
 		opponent = opponentType;
 		int currentDepth = 0;
-		Move result;
-		int defaultValue = -2^31;
+		Move bestMove = null;
+		int defaultValue = MIN_INT;
 		
 		ArrayList<Move> moveOptions= successor.moveOptions(player, board);
-		for (Move move : boardState.possibleMoves(player)) {
+		for (int i=0; i<moveOptions.size();i++) {
 			
-			Board tempBoard = new Board(boardState.size());
+			board tempBoard = new board(board.size);
 			
-			for (int row=0; row<tempBoard.size(); row++) {
-				for (int col=0; col<tempBoard.size(); col++) {
-					tempBoard.insert(row, col, boardState.get(row, col));
+			for (int row=0; row<tempBoard.size; row++) {
+				for (int col=0; col<tempBoard.size; col++) {
+					tempBoard.insert(row, col, board.bd[row][ col]);
 				}
 			}
 			
-			tempBoard.insertMove(move);
-			int value = minValue(tempBoard,
-					Integer.MIN_VALUE, Integer.MAX_VALUE, depth+1);
+			moveHandler.validMove(moveOptions.get(i), tempBoard);
+			int nodeValue = minValue(tempBoard,
+					MIN_INT, MAX_INT, currentDepth+1);
 			
-			if (value > resultValue) {
-				result = move;
-				resultValue = value;
+			if (nodeValue > defaultValue) {
+				bestMove = moveOptions.get(i);
+				defaultValue = nodeValue;
 			}
 		}
 
-		return result;
+		return bestMove;
 	}
 	
-	private static int minValue(Board boardState,
-			int alpha, int beta, int depth) {
+	private static int minValue(board board, int alpha, int beta, int currentDepth) {
 			
-		if (isTerminalState(boardState, depth)) {
-			return getUtility(boardState);
+		if (isTerminalState(board, currentDepth) || currentDepth==maxSearchDepth) {
+			return getUtility(board);
 		}
 		
-		int value = Integer.MAX_VALUE;
+		int nodeValue = MAX_INT;
 		
-		for (Move move : boardState.possibleMoves(OPPONENT)) {
-			Board tempBoard = new Board(boardState.size());
+		
+		ArrayList<Move> moveOptions= successor.moveOptions(opponent, board);
+		for (int i=0; i<moveOptions.size();i++) {
+			board tempBoard = new board(board.size);
 			
-			for (int row=0; row<tempBoard.size(); row++) {
-				for (int col=0; col<tempBoard.size(); col++) {
-					tempBoard.insert(row, col, boardState.get(row, col));
+			for (int row=0; row<tempBoard.size; row++) {
+				for (int col=0; col<tempBoard.size; col++) {
+					tempBoard.insert(row, col, board.bd[row][ col]);
 				}
 			}
 			
-			tempBoard.insertMove(move);
-			value = Math.min(value, maxValue(tempBoard,
-					alpha, beta, depth+1));
+			moveHandler.validMove(moveOptions.get(i), tempBoard);
+			nodeValue = Math.min(nodeValue, maxValue(tempBoard, alpha, beta, currentDepth+1));
 			
-			if(value <= alpha) {
-				return value;
+			if(nodeValue <= alpha) {
+				return nodeValue;
 			}
 			
-			beta = Math.min(value, beta);
+			beta = Math.min(nodeValue, beta);
 					
 		}
-		return value;
+		return nodeValue;
 	}
 	
-	private static int maxValue(Board boardState,
-			int alpha, int beta, int depth) {
+	private static int maxValue(board board, int alpha, int beta, int currentDepth) {
 			
-		if (isTerminalState(boardState, depth)) {
-			return getUtility(boardState);
+		if (isTerminalState(board, currentDepth) || currentDepth== maxSearchDepth) {
+			return getUtility(board);
 		}
 		
-		int value = Integer.MIN_VALUE;
+		int nodeValue = MIN_INT;
 		
-		for (Move move : boardState.possibleMoves(PLAYER)) {
-			Board tempBoard = new Board(boardState.size());
+		ArrayList<Move> moveOptions= successor.moveOptions(player, board);
+		for (int i=0; i<moveOptions.size();i++) {
+			board tempBoard = new board(board.size);
 			
-			for (int row=0; row<tempBoard.size(); row++) {
-				for (int col=0; col<tempBoard.size(); col++) {
-					tempBoard.insert(row, col, boardState.get(row, col));
+			for (int row=0; row<tempBoard.size; row++) {
+				for (int col=0; col<tempBoard.size; col++) {
+					tempBoard.insert(row, col, board.bd[row][col]);
 				}
 			}
 			
-			tempBoard.insertMove(move);
-			value = Math.max(value, minValue(tempBoard,
-					alpha, beta, depth+1));
+			moveHandler.validMove(moveOptions.get(i), tempBoard);
+			nodeValue = Math.max(nodeValue, minValue(tempBoard,alpha, beta, currentDepth+1));
 			
-			if(value >= beta) {
-				return value;
+			if(nodeValue >= beta) {
+				return nodeValue;
 			}
 			
-			alpha = Math.max(value, alpha);
+			alpha = Math.max(nodeValue, alpha);
 					
 		}
-		return value;
+		return nodeValue;
 	}
 	
 	// Calculates if board state is a terminal state (max depth or no
 	// empty positions)
-	private static boolean isTerminalState(Board board, int depth) {
-		if (board.numEmpty() == 0 || depth == MAXDEPTH) {
+	private static boolean isTerminalState(board board, int currentDepth) {
+		if (board.numPieces(EMPTY) == 0) {
 			return true;
 		}
 		
 		return false;
 	}
 	
+	
 	// Calculates the utility value of the board state
-	private static int getUtility(Board board) {
-		if (board.numEmpty() == 0) {
+	private static int getUtility(board board) {
+		if (board.numPieces(EMPTY) == 0) {
 			// Returns max value if win board state
-			if (board.numPlayerPieces(PLAYER) > board.numPlayerPieces(OPPONENT)) {
-				return Integer.MAX_VALUE-1;
+			if (board.numPieces(player) > board.numPieces(opponent)) {
+				return MAX_INT;
 			// Returns min value if lose board state
-			} else if (board.numPlayerPieces(OPPONENT)>board.numPlayerPieces(PLAYER)) {
-				return Integer.MIN_VALUE+1;
+			} else if (board.numPieces(opponent)>board.numPieces(player)) {
+				return MIN_INT;
 			// Returns 0 if draw
 			} else
 				return 0;
 		}
 		// Otherwise returns the amount of player pieces minus the opponent's
-		return board.numPlayerPieces(PLAYER)-board.numPlayerPieces(OPPONENT);
-	}
-	
-	// Sorts moves according to move value using quicksort algorithm
-	// NOT USED IN THE FINAL CODE
-	private static ArrayList<Move> sortMoves(ArrayList<Move> moves, Board boardState) {
-		int[] moveValues = new int[moves.size()];
-		
-		for (int i=0; i < moves.size(); i++) {
-			Board tempBoard = new Board(boardState.size());
-			
-			for (int row=0; row<tempBoard.size(); row++) {
-				for (int col=0; col<tempBoard.size(); col++) {
-					tempBoard.insertMove(moves.get(i));
-					moveValues[i] = getUtility(tempBoard);
-				}
-			}
-		}
-		
-		int[] sortedValues = QuickSort.sort(moveValues);
-		ArrayList<Move> sortedMoves = new ArrayList<Move>();
-		
-		int i=0;
-		
-		while (i < moves.size()) {
-			if (sortedValues[i] == moveValues[i]) {
-				sortedMoves.add(moves.get(i));
-				sortedValues[i] = -1000;
-				i++;
-			}
-		}
-		
-		return sortedMoves;
+		return board.numPieces(player)-board.numPieces(opponent);
 	}
 	
 }
