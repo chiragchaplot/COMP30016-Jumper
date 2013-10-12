@@ -77,10 +77,8 @@ public class moveHandler implements Piece {
 		int[] x= move.RowPositions;
 		int[] y= move.ColPositions;
 		for (int i=0; i<x.length-1; i++) 
-		{
-			
-			// Check if jump move is into valid position
-			if (!jumpMovePossible(x[i],y[i],x[i+1], y[i+1])) 
+		{// Check if jump move is into valid position
+			if (!jumpMovePossible(x[i],y[i],x[i+1], y[i+1], board)) 
 			{
 				return false;	
 			}
@@ -99,4 +97,56 @@ public class moveHandler implements Piece {
 		return true;
 		}
 
+	
+	public static boolean jumpMovePossible(int r1, int c1, int r2, int c2, board board)
+	{
+		//Check if r1,r2,c1,c2 are valid
+		if(r1<0||r2<0||c1<0||c2<0)
+		{
+			return false;
+		}
+		else if(r1>size||r2>size||c1>size||c2>size)
+		{
+			return false;
+		}
+		
+		//Check if r2 and c2 are empty
+		else if(bd[r2][c2]!=Piece.EMPTY)
+		{
+			return false;
+		}
+		
+		//Check if middle cells are in valid 
+		//Not dead
+		//Not Empty
+		else if(bd[(r1+r2)/2][(c1+c2)/2]==Piece.EMPTY)
+		{
+			return false;
+		}
+		else if(bd[(r1+r2)/2][(c1+c2)/2]==Piece.DEAD)
+		{
+			return false;
+		}
+		
+		//Check if the pieces are actually one jump away or not
+		else
+		{
+			for(int i=r1-2;i<r1+2;i=i+2)
+				for(int j=c1-2;j<c1+2;j=j+2)
+				{
+					//When reaching r1 and c1 ignore it
+					if(i==r1&&j==c1)
+					{
+						continue;
+					}
+					//When reaching r2 and c2 return true
+					else if(i==r2&&j==c2)
+					{
+						return true;
+					}
+				}
+		}
+		
+		return false;
+	}
 }
