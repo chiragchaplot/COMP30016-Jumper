@@ -11,14 +11,18 @@ import java.util.StringTokenizer;
 public class board 
 {
 	//W - White Pieces, B- Black Pieces, D = Dead cell Spot, Blank=Blank cells
-	public static int size,W,B,X, Blank;
+	public int size;
+	public int W;
+	public int B;
+	public int X;
+	public int Blank;
 	//initialize board as a 2D array of chars
-	public static int[][]  bd;
+	public int[][]  bd;
 	
 	/*
 	 * Constructor to set up board
 	 */
-	public board()
+	public board(int boardSize)
 	{
 		/*this.size=size;
 		for(int i=0;i<size;i++)
@@ -27,7 +31,8 @@ public class board
 				bd[i][j]='-';
 			}*/
 		
-		bd = new int[size][size];
+		bd = new int[boardSize][boardSize];
+		size= boardSize;
 	}
 	
 	
@@ -36,7 +41,7 @@ public class board
 	 * @param inputFile
 	 * @throws IOException
 	 */
-	public static void setboard(String inputFile) throws IOException
+	public void setboard(String inputFile) throws IOException
 	{
 		BufferedReader in = new BufferedReader(new FileReader(inputFile));
 		String text= in.readLine();
@@ -93,7 +98,7 @@ public class board
 /** Method for displaying the current board configuration
  * 
  */
-	static void display()
+	public void display()
 	{
 		for(int i=0;i<size;i++)
 		{
