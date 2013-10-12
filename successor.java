@@ -109,34 +109,8 @@ public class successor
 				board.bd[toX[i]][toY[i]]=Piece.EMPTY;
 				
 			}
+		}
 		
-		
-		
-		for(int i=fromX-2;i<fromX+2;i=i+2)
-			for(int j=fromY-2;j<fromY+2;j=j+2)
-			{
-				if(i==fromX && j==fromY)
-				{
-					continue;
-				}
-				else if(b.jumpMovePossible(fromX, fromY, i, j))
-				{
-					terminal=0;
-					
-					//Add to list of nodes visited
-					rowPos.add(i);
-					colPos.add(j);
-					
-					//Insert player
-					b.bd[fromX][fromY]=player;
-					
-					//Check for more jumps by recrusion
-					compoundJump(jumpMovesArrayList, rowPos, colPos, i,j,player, b);
-					
-					//After checking make the piece empty to check for new avenues
-					b.bd[i][j]=Piece.EMPTY;					
-				}
-			}
 		
 		if(terminal==1)
 		{
@@ -156,7 +130,7 @@ public class successor
 	}
 	
 	//Get array from array list
-	public int[] getArray(ArrayList<Integer> num)
+	public static int[] getArray(ArrayList<Integer> num)
 	{
 		int[] temp = new int[num.size()];
 		for(int i=0;i<num.size();i++)
