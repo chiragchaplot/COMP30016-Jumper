@@ -12,3 +12,6 @@
 /successor.class
 /moveHandler.class
 /MinMaxAlphaBeta.class
+/BestMove.class
+/GamePlayingAgent.class
+/SearchAgent.class

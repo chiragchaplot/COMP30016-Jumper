@@ -1,7 +1,7 @@
 import java.io.PrintStream;
 
 
-public class nalamcchaplot implements Player, Piece
+public class GamePlayingAgent implements Player, Piece
 {
 	public board b;	//BOARD TO BE PLAYED ON  
 	int size;	//SIZE OF THE BOARD
@@ -37,6 +37,7 @@ public class nalamcchaplot implements Player, Piece
 		//Create a new board
 		b = new board(boardSize);
 		playertype = player;
+		size= boardSize;
 		
 		//Assign Player types
 		if(playertype==WHITE)
@@ -57,9 +58,11 @@ public class nalamcchaplot implements Player, Piece
 	
 	public Move makeMove()
 	{
-		Move bestMove = MinMaxAlphaBeta.bestMove(b,playertype, opponenttype);
-		moveHandler.validMove(bestMove, b);
-		return bestMove;
+		Move move = SearchAgent.bestMove(b,playertype, opponenttype);
+		//System.out.println("makeMove for player"+playertype);
+		b.validMove(move);
+		//System.out.println("makeMove for player"+playertype);
+		return move;
 		
 	}
 	
@@ -68,11 +71,12 @@ public class nalamcchaplot implements Player, Piece
 	 */
 	public int opponentMove(Move m)
 	{
+		//System.out.println("opponentMove for player"+playertype);
 		int moveValid=0;
-		if (moveHandler.validMove(m, b)==false){ 
+		if (b.validMove(m)==false){ 
 			moveValid= INVALID;
+			//System.out.println("invalid");
 		}
-		
 		return moveValid;
 		
 	}
@@ -80,8 +84,9 @@ public class nalamcchaplot implements Player, Piece
 	
 	public void printBoard(PrintStream output) {
 		
-		for(int row=0; row<b.Size(); row++){
-			for(int col=0; col<b.Size(); col++) {
+		//output.println("board from player"+playertype);
+		for(int row=0; row<size; row++){
+			for(int col=0; col<size; col++) {
 				output.print(b.getBd()[row][col]);
 				output.print(' ');
 			}
